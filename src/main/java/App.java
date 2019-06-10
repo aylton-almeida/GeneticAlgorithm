@@ -1,6 +1,8 @@
+import Problems.KnapsackProblem;
+
 public class App {
 
     public static void main(String[] args) {
-        System.out.println("hello world");
+        new KnapsackProblem().startDemo(20, 7);
     }
 }

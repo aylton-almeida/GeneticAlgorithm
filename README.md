@@ -1,2 +1,10 @@
-# GeneticAlgorithm
-Algorítimo genético para desenvolvimento de trabalhos e testes
+# Genetic Algorithm
+Algorítimo genético desenvolvido para utilização em trabalhos e projetos.
+
+## Tecnologias utilizadas
+
+* Java
+
+## Autor
+
+* Aylton Almeida

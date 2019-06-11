@@ -7,7 +7,7 @@ import java.util.Random;
 
 public abstract class Population {
     protected List<Individual> population = new ArrayList<>();
-    private Individual[] fittest = new Individual[2];
+    private List<Individual> fittest = new ArrayList<>();
     private int generationCount = 1;
     private Random rnd = new Random();
 
@@ -24,9 +24,10 @@ public abstract class Population {
         for (int i = 0; i < numberGenerations; i++) {
             selection();
             crossover();
-            mutation();
+            if (rnd.nextInt() % 7 < 5)
+                mutation();
             computeFitnessScore();
-            System.out.println("Generation: " + this.generationCount + " Fittest: " + fittest[0]);
+            System.out.println("Generation: " + this.generationCount + " Fittest: " + fittest.get(0));
             generationCount++;
         }
     }
@@ -44,10 +45,16 @@ public abstract class Population {
         Two pairs of individuals(parents) are selected base on their
         fitness scores
     */
-    protected void selection() {
+    private void selection() {
+        //Define k, that will decide how many individuals will stay
+        int k = rnd.nextInt(population.size() / 2);
+
         //Select most fit individuals
-        fittest[0] = population.stream().max(Comparator.comparingInt(Individual::getFitnessScore)).get();
-        fittest[1] = population.stream().filter(individual -> !individual.equals(fittest[0])).max(Comparator.comparingInt(Individual::getFitnessScore)).get();
+        for (int i = 0; i < k; i++) {
+            fittest.add(population.stream().max(Comparator.comparingInt(Individual::getFitnessScore)).get());
+            population.remove(population.stream().max(Comparator.comparingInt(Individual::getFitnessScore)).get());
+            population.remove(population.stream().min(Comparator.comparingInt(Individual::getFitnessScore)).get());
+        }
     }
 
 
@@ -58,15 +65,15 @@ public abstract class Population {
         until the crossover point is reached.
         At the end the new offspring are added to the population
     */
-    protected void crossover() {
+    private void crossover() {
         //Select offSring
         int offSpring = rnd.nextInt(population.get(0).getChromosome().length);
 
         //Swap values among parents
         for (int i = 0; i < offSpring; i++) {
-            Gene temp = fittest[0].getChromosome()[i];
-            fittest[0].getChromosome()[i] = fittest[1].getChromosome()[i];
-            fittest[1].getChromosome()[i] = temp;
+            Gene temp = fittest.get(0).getChromosome()[i];
+            fittest.get(0).getChromosome()[i] = fittest.get(1).getChromosome()[i];
+            fittest.get(1).getChromosome()[i] = temp;
         }
     }
 
@@ -74,22 +81,22 @@ public abstract class Population {
         In each offspring formed, there is a low random probability that a
         mutation occurs. Which means that some of the genes are flipped.
     */
-    protected void mutation() {
+    private void mutation() {
         //Select a random mutation point
         int mutationPoint = rnd.nextInt(population.get(0).getChromosome().length);
 
         //Flip values at the mutation pint
-        if (fittest[0].getChromosome()[mutationPoint].isActive())
-            fittest[0].getChromosome()[mutationPoint].setActive(false);
+        if (fittest.get(0).getChromosome()[mutationPoint].isActive())
+            fittest.get(0).getChromosome()[mutationPoint].setActive(false);
         else
-            fittest[0].getChromosome()[mutationPoint].setActive(true);
+            fittest.get(0).getChromosome()[mutationPoint].setActive(true);
 
         mutationPoint = rnd.nextInt(population.get(0).getChromosome().length);
 
-        if (fittest[1].getChromosome()[mutationPoint].isActive())
-            fittest[1].getChromosome()[mutationPoint].setActive(false);
+        if (fittest.get(1).getChromosome()[mutationPoint].isActive())
+            fittest.get(1).getChromosome()[mutationPoint].setActive(false);
         else
-            fittest[1].getChromosome()[mutationPoint].setActive(true);
+            fittest.get(1).getChromosome()[mutationPoint].setActive(true);
     }
 
     /*

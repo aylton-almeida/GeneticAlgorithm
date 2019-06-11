@@ -17,6 +17,6 @@ public class App {
         items.add(new Item(600, 5.9));
         items.add(new Item(700, 6.9));
         KnapsackProblem demo = new KnapsackProblem(11, items);
-        demo.startDemo(16, items.size(), 40);
+//        demo.startDemo(16, items.size(), 40);
     }
 }

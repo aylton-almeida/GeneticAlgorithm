@@ -6,7 +6,7 @@ public class Gene {
 
     public Gene(String description, boolean isActive){
         setDescription(description);
-        setActive(true);
+        setActive(isActive);
     }
 
     public String getDescription() {
@@ -23,5 +23,10 @@ public class Gene {
 
     public void setActive(boolean active) {
         isActive = active;
+    }
+
+    @Override
+    public String toString(){
+        return this.description + ": " + this.isActive;
     }
 }

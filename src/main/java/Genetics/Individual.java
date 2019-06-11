@@ -1,15 +1,26 @@
 package Genetics;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 public class Individual {
+    private static AtomicInteger nextId = new AtomicInteger();
+    private int id;
     private Gene[] chromosome;
     private int fitnessScore;
 
-    public Individual(int geneNumber){
-        generateChromosomes(geneNumber);
+    public Individual(Gene[] chromosome) {
+        setChromosome(chromosome);
+        id = nextId.incrementAndGet();
     }
 
-    public Individual(Gene[] chromosome){
+    public Individual(Gene[] chromosome, int id, int fitnessScore) {
         setChromosome(chromosome);
+        this.id = id;
+        setFitnessScore(fitnessScore);
+    }
+
+    public int getId() {
+        return id;
     }
 
     public Gene[] getChromosome() {
@@ -18,13 +29,6 @@ public class Individual {
 
     public void setChromosome(Gene[] chromosome) {
         this.chromosome = chromosome;
-    }
-
-    public void generateChromosomes(int geneNumber) {
-        this.chromosome = new Gene[geneNumber];
-        for (int i = 0; i < geneNumber; i++)
-            chromosome[i] = new Gene("Gene " + i, Math.random() < 0.5);
-
     }
 
     public int getFitnessScore() {
@@ -36,7 +40,13 @@ public class Individual {
     }
 
     @Override
-    public String toString(){
-        return
+    public String toString() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("[").append(id).append("] - {");
+        for (Gene g : chromosome)
+            stringBuilder.append(g.isActive()).append("|");
+        stringBuilder.deleteCharAt(stringBuilder.length() - 1);
+        stringBuilder.append("} - ").append(this.fitnessScore);
+        return stringBuilder.toString();
     }
 }

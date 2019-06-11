@@ -24,7 +24,8 @@ public abstract class Population {
         for (int i = 0; i < numberGenerations; i++) {
             selection();
             crossover();
-            mutation();
+            if (rnd.nextInt() % 7 < 5)
+                mutation();
             computeFitnessScore();
             System.out.println("Generation: " + this.generationCount + " Fittest: " + fittest[0]);
             generationCount++;
